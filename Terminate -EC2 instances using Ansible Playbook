@@ -1,0 +1,215 @@
+$cat terminateec2.yml
+- name: Terminate instances
+  hosts: localhost
+  connection: local
+  vars:
+    instance_ids:
+      - 'i-0ebfa19*******'
+      - 'i-0c564a8*******'
+    region: ap-south-1
+    vpc_subnet_id: subnet-d******
+  tasks:
+    - name: Terminate instances that were previously launched
+      ec2:
+        region: '{{ region }}'
+        vpc_subnet_id: '{{  vpc_subnet_id }}'
+        state: 'absent'
+        instance_ids: '{{ instance_ids }}'
+
+
+[root@ip-172-31-26-173 ~]# vi stopec2.yaml
+[root@ip-172-31-26-173 ~]# ansible-playbook stopec2.yaml --check
+ [WARNING]: provided hosts list is empty, only localhost is available. Note
+that the implicit localhost does not match 'all'
+
+
+PLAY [Terminate instances] *****************************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Terminate instances that were previously launched] ***********************
+skipping: [localhost]
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=1    changed=0    unreachable=0    failed=0
+
+[root@ip-172-31-26-173 ~]# ansible-playbook stopec2.yaml -vvv
+ansible-playbook 2.4.6.0
+  config file = /etc/ansible/ansible.cfg
+  configured module search path = [u'/root/.ansible/plugins/modules', u'/usr/share/ansible/plugins/modules']
+  ansible python module location = /usr/lib/python2.7/site-packages/ansible
+  executable location = /bin/ansible-playbook
+  python version = 2.7.14 (default, Jul 26 2018, 19:59:38) [GCC 7.3.1 20180303 (Red Hat 7.3.1-5)]
+Using /etc/ansible/ansible.cfg as config file
+Parsed /etc/ansible/hosts inventory source with ini plugin
+ [WARNING]: provided hosts list is empty, only localhost is available. Note
+that the implicit localhost does not match 'all'
+
+
+PLAYBOOK: stopec2.yaml *********************************************************
+1 plays in stopec2.yaml
+
+PLAY [Terminate instances] *****************************************************
+
+TASK [Gathering Facts] *********************************************************
+Using module file /usr/lib/python2.7/site-packages/ansible/modules/system/setup.py
+<127.0.0.1> ESTABLISH LOCAL CONNECTION FOR USER: root
+<127.0.0.1> EXEC /bin/sh -c 'echo ~ && sleep 0'
+<127.0.0.1> EXEC /bin/sh -c '( umask 77 && mkdir -p "` echo /root/.ansible/tmp/ansible-tmp-1544104374.08-176409651457294 `" && echo ansible-tmp-1544104374.08-176409651457294="` echo /root/.ansible/tmp/ansible-tmp-1544104374.08-176409651457294 `" ) && sleep 0'
+<127.0.0.1> PUT /tmp/tmpIvHL30 TO /root/.ansible/tmp/ansible-tmp-1544104374.08-176409651457294/setup.py
+<127.0.0.1> EXEC /bin/sh -c 'chmod u+x /root/.ansible/tmp/ansible-tmp-1544104374.08-176409651457294/ /root/.ansible/tmp/ansible-tmp-1544104374.08-176409651457294/setup.py && sleep 0'
+<127.0.0.1> EXEC /bin/sh -c '/usr/bin/python2 /root/.ansible/tmp/ansible-tmp-1544104374.08-176409651457294/setup.py; rm -rf "/root/.ansible/tmp/ansible-tmp-1544104374.08-176409651457294/" > /dev/null 2>&1 && sleep 0'
+ok: [localhost]
+META: ran handlers
+
+TASK [Terminate instances that were previously launched] ***********************
+task path: /root/stopec2.yaml:11
+Using module file /usr/lib/python2.7/site-packages/ansible/modules/cloud/amazon/ec2.py
+<127.0.0.1> ESTABLISH LOCAL CONNECTION FOR USER: root
+<127.0.0.1> EXEC /bin/sh -c 'echo ~ && sleep 0'
+<127.0.0.1> EXEC /bin/sh -c '( umask 77 && mkdir -p "` echo /root/.ansible/tmp/ansible-tmp-1544104374.52-262695439177343 `" && echo ansible-tmp-1544104374.52-262695439177343="` echo /root/.ansible/tmp/ansible-tmp-1544104374.52-262695439177343 `" ) && sleep 0'
+<127.0.0.1> PUT /tmp/tmpY8Jymr TO /root/.ansible/tmp/ansible-tmp-1544104374.52-262695439177343/ec2.py
+<127.0.0.1> EXEC /bin/sh -c 'chmod u+x /root/.ansible/tmp/ansible-tmp-1544104374.52-262695439177343/ /root/.ansible/tmp/ansible-tmp-1544104374.52-262695439177343/ec2.py && sleep 0'
+<127.0.0.1> EXEC /bin/sh -c '/usr/bin/python2 /root/.ansible/tmp/ansible-tmp-1544104374.52-262695439177343/ec2.py; rm -rf "/root/.ansible/tmp/ansible-tmp-1544104374.52-262695439177343/" > /dev/null 2>&1 && sleep 0'
+changed: [localhost] => {
+    "changed": true,
+    "failed": false,
+    "instance_ids": [
+        "i-0ebfa196876940b1b",
+        "i-0c564a8c2b90fb365"
+    ],
+    "instances": [
+        {
+            "ami_launch_index": "0",
+            "architecture": "x86_64",
+            "block_device_mapping": {
+                "/dev/xvda": {
+                    "delete_on_termination": true,
+                    "status": "attached",
+                    "volume_id": "vol-0c278bb17f87e9388"
+                }
+            },
+            "dns_name": "ec2-13-127-17-87.ap-south-1.compute.amazonaws.com",
+            "ebs_optimized": false,
+            "groups": {
+                "sg-8ff209e4": "default"
+            },
+            "hypervisor": "xen",
+            "id": "i-0ebfa196876940b1b",
+            "image_id": "ami-06bcd1131b2f55803",
+            "instance_type": "t2.micro",
+            "kernel": null,
+            "key_name": "id_rsa",
+            "launch_time": "2018-12-06T13:46:58.000Z",
+            "placement": "ap-south-1b",
+            "private_dns_name": "ip-172-31-2-30.ap-south-1.compute.internal",
+            "private_ip": "172.31.2.30",
+            "public_dns_name": "ec2-13-127-17-87.ap-south-1.compute.amazonaws.com",
+            "public_ip": "13.127.17.87",
+            "ramdisk": null,
+            "region": "ap-south-1",
+            "root_device_name": "/dev/xvda",
+            "root_device_type": "ebs",
+            "state": "running",
+            "state_code": 16,
+            "tags": {},
+            "tenancy": "default",
+            "virtualization_type": "hvm"
+        },
+        {
+            "ami_launch_index": "0",
+            "architecture": "x86_64",
+            "block_device_mapping": {
+                "/dev/xvda": {
+                    "delete_on_termination": true,
+                    "status": "attached",
+                    "volume_id": "vol-05a5bde16fa27d377"
+                }
+            },
+            "dns_name": "ec2-52-66-240-221.ap-south-1.compute.amazonaws.com",
+            "ebs_optimized": false,
+            "groups": {
+                "sg-8ff209e4": "default"
+            },
+            "hypervisor": "xen",
+            "id": "i-0c564a8c2b90fb365",
+            "image_id": "ami-06bcd1131b2f55803",
+            "instance_type": "t2.micro",
+            "kernel": null,
+            "key_name": "id_rsa",
+            "launch_time": "2018-12-06T13:37:30.000Z",
+            "placement": "ap-south-1b",
+            "private_dns_name": "ip-172-31-2-41.ap-south-1.compute.internal",
+            "private_ip": "172.31.2.41",
+            "public_dns_name": "ec2-52-66-240-221.ap-south-1.compute.amazonaws.com",
+            "public_ip": "52.66.240.221",
+            "ramdisk": null,
+            "region": "ap-south-1",
+            "root_device_name": "/dev/xvda",
+            "root_device_type": "ebs",
+            "state": "running",
+            "state_code": 16,
+            "tags": {},
+            "tenancy": "default",
+            "virtualization_type": "hvm"
+        }
+    ],
+    "invocation": {
+        "module_args": {
+            "assign_public_ip": false,
+            "aws_access_key": null,
+            "aws_secret_key": null,
+            "count": 1,
+            "count_tag": null,
+            "ebs_optimized": false,
+            "ec2_url": null,
+            "exact_count": null,
+            "group": null,
+            "group_id": null,
+            "id": null,
+            "image": null,
+            "instance_ids": [
+                "i-0ebfa196876940b1b",
+                "i-0c564a8c2b90fb365"
+            ],
+            "instance_initiated_shutdown_behavior": null,
+            "instance_profile_name": null,
+            "instance_tags": null,
+            "instance_type": null,
+            "kernel": null,
+            "key_name": null,
+            "monitoring": false,
+            "network_interfaces": null,
+            "placement_group": null,
+            "private_ip": null,
+            "profile": null,
+            "ramdisk": null,
+            "region": "ap-south-1",
+            "security_token": null,
+            "source_dest_check": true,
+            "spot_launch_group": null,
+            "spot_price": null,
+            "spot_type": "one-time",
+            "spot_wait_timeout": "600",
+            "state": "absent",
+            "tenancy": "default",
+            "termination_protection": null,
+            "user_data": null,
+            "validate_certs": true,
+            "volumes": null,
+            "vpc_subnet_id": "subnet-df677b92",
+            "wait": false,
+            "wait_timeout": "300",
+            "zone": null
+        }
+    },
+    "tagged_instances": []
+}
+META: ran handlers
+META: ran handlers
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=2    changed=1    unreachable=0    failed=0
+
+[root@ip-172-31-26-173 ~]#
